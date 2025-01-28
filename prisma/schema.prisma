@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
+}
+
+enum TipoSocio {
+  SOCIO
+  SOCIO_FIDAL
+  TESSERATO
+  SOCIO_SOSTENITORE
+  ADMIN
+}
+
+model Socio {
+  // indici
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  email         String @unique
+  codiceFiscale String @unique
+
+  // dati anagrafici
+  nome           String
+  cognome        String
+  luogoNascita   String?
+  dataNascita    DateTime?
+  luogoResidenza String?
+  indirizzo      String?
+  cap            String?
+  provincia      String?
+  numeroTelefono String?
+
+  // sicurezza
+  passwordHash String
+  tipoSocio    TipoSocio @default(SOCIO)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // relazioni
+}
+
+model Immagine {
+  // indici
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // dati
+  altText          String
+  objectId         String  @unique @db.ObjectId
+  includeInGallery Boolean @default(false)
+
+  // sicurezza
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
