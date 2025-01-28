@@ -18,7 +18,6 @@ import ErrorAlert from "@/components/error-alert";
 import {toast} from "react-toastify";
 import {useRouter} from "next/navigation";
 import {Checkbox} from "@/components/ui/checkbox";
-import {CheckedState} from "@radix-ui/react-checkbox";
 
 interface ImageUploadDialogProps {
   isDialogOpen: boolean
@@ -28,7 +27,8 @@ interface ImageUploadDialogProps {
 export function ImageUploadDialog({ isDialogOpen, setIsDialogOpen }: ImageUploadDialogProps) {
   const [state, formAction, pending] = useActionState(saveImageAction, {message: ''});
   const [altText, setAltText] = useState('');
-  const [checkboxChecked, setCheckboxChecked] = useState(false);
+  const [isGalleryChecked, setIsGalleryChecked] = useState(false);
+  const [isSponsorChecked, setIsSponsorChecked] = useState(false);
   const router = useRouter();
 
   const updateQueryParams = (key: string, value: string) => {
@@ -44,14 +44,6 @@ export function ImageUploadDialog({ isDialogOpen, setIsDialogOpen }: ImageUpload
       updateQueryParams('key', Math.random().toString());
     }
   }, [state]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAltText(e.target.value);
-  }
-
-  const handleCheckboxChange = (checkedState: CheckedState) => {
-    setCheckboxChecked(checkedState === true);
-  }
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -82,7 +74,14 @@ export function ImageUploadDialog({ isDialogOpen, setIsDialogOpen }: ImageUpload
               <Label htmlFor="altText" className="text-right">
                 Descrizione
               </Label>
-              <Input id="altText" name="altText" className="col-span-3" value={altText} onChange={handleChange} required/>
+              <Input 
+                id="altText" 
+                name="altText" 
+                className="col-span-3" 
+                value={altText} 
+                onChange={(e) => setAltText(e.target.value)} 
+                required
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <div></div>
@@ -91,11 +90,26 @@ export function ImageUploadDialog({ isDialogOpen, setIsDialogOpen }: ImageUpload
                   id="includeInGallery"
                   name="includeInGallery"
                   value="true"
-                  checked={checkboxChecked}
-                  onCheckedChange={handleCheckboxChange}
+                  checked={isGalleryChecked}
+                  onCheckedChange={(c) => setIsGalleryChecked(c === true)}
                 />
                 <label htmlFor="includeInGallery" className="text-sm font-medium leading-none block mt-0.5">
                   Includi nella Photo Gallery
+                </label>
+              </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <div></div>
+              <div className="w-max gap-2 flex row-auto">
+                <Checkbox
+                  id="includeInSponsor"
+                  name="includeInSponsor"
+                  value="true"
+                  checked={isSponsorChecked}
+                  onCheckedChange={(c) => setIsSponsorChecked(c === true)}
+                />
+                <label htmlFor="includeInSponsor" className="text-sm font-medium leading-none block mt-0.5">
+                  Includi nella Sponsor Gallery
                 </label>
               </div>
             </div>

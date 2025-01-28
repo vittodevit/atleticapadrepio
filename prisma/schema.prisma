@@ -49,6 +49,7 @@ model Immagine {
   altText          String
   objectId         String  @unique @db.ObjectId
   includeInGallery Boolean @default(false)
+  includeInSponsor Boolean @default(false)
 
   // sicurezza
   createdAt DateTime @default(now())

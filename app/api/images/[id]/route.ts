@@ -4,7 +4,7 @@ import { getDownloadStream, getFileName } from '@/lib/gridfs';
 
 const prisma = new PrismaClient();
 
-//TODO: implementazione cache immagini
+export const dynamic = 'force-static';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   const { id } = await params;
