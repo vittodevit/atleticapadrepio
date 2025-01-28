@@ -23,7 +23,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     }
 
     const downloadStream = await getDownloadStream(image.objectId);
-    const fileName = await getFileName(image.objectId) || `${image.objectId}.webp`;
+    const fileName = (await getFileName(image.objectId)) || `${image.objectId}.webp`;
 
     const headers = new Headers();
     headers.set('Content-Type', 'image/webp');

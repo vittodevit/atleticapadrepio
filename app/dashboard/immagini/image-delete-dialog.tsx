@@ -43,7 +43,7 @@ export function ImageDeleteDialog({ isDialogOpen, setIsDialogOpen, dialogData }:
     }
   }, [state]);
 
-  return (
+  return state.message !== 'success' ? (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <form action={formAction}>
@@ -65,6 +65,10 @@ export function ImageDeleteDialog({ isDialogOpen, setIsDialogOpen, dialogData }:
           <div className="text-gray-500 mb-5">
             <span className="font-semibold">Didascalia: </span> {dialogData.altText}<br />
             <span className="font-semibold">ObjectID: </span> {dialogData.id} <br />
+            <span className="font-semibold">Inclusa in Photo Gallery: </span>
+            {dialogData.includeInGallery ? 'Si' : 'No'}<br />
+            <span className="font-semibold">Inclusa in Sponsor Gallery: </span>
+            {dialogData.includeInSponsor ? 'Si' : 'No'}<br />
             <span className="font-semibold">Ultima modifica: </span> {niceTimestamp(dialogData.updatedAt || new Date())} <br />
           </div>
           <DialogFooter>
@@ -76,5 +80,5 @@ export function ImageDeleteDialog({ isDialogOpen, setIsDialogOpen, dialogData }:
         </form>
       </DialogContent>
     </Dialog>
-  )
+  ) : null;
 }
