@@ -25,7 +25,7 @@ model Socio {
   nome           String
   cognome        String
   luogoNascita   String?
-  dataNascita    DateTime?
+  dataNascita    DateTime
   luogoResidenza String?
   indirizzo      String?
   cap            String?
@@ -50,6 +50,35 @@ model Immagine {
   objectId         String  @unique @db.ObjectId
   includeInGallery Boolean @default(false)
   includeInSponsor Boolean @default(false)
+
+  // sicurezza
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Documento {
+  // indici
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // dati
+  titolo      String
+  descrizione String?
+  objectId    String  @unique @db.ObjectId
+
+  // sicurezza
+  tipoSociDestinatari TipoSocio[]
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+}
+
+model Categoria {
+  // indici
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // dati
+  nome        String
+  descrizione String?
+  slug        String  @unique
 
   // sicurezza
   createdAt DateTime @default(now())

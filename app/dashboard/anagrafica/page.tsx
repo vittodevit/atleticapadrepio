@@ -5,18 +5,18 @@ import ErrorAlert from "@/components/error-alert";
 import PageTitleInjector from "@/components/page-title-injector";
 import {Suspense} from "react";
 import DbLoading from "@/components/db-loading";
-import ImageGallery from "@/app/dashboard/immagini/image-gallery";
+import GestioneSociTable from "@/app/dashboard/anagrafica/table";
 
 export const metadata: Metadata = {
-  title: "Galleria Immagini - Atletica Padre Pio",
+  title: "Gestione Soci - Atletica Padre Pio",
   description: "Atletica Padre Pio – sito ufficiale San Giovanni Rotondo",
 };
 
 const prisma = new PrismaClient();
 
-export default async function GestioneImmaginiPage(
+export default async function GestioneSociPage(
   { searchParams }: { searchParams: {
-    [key: string]: string }
+      [key: string]: string }
   }
 ) {
   const session = await auth();
@@ -24,16 +24,14 @@ export default async function GestioneImmaginiPage(
     return <ErrorAlert error='Sessione non valida, si prega di riautenticarsi' />;
   }
 
-  const sp = (await searchParams);
-  const renderKey = sp.key;
-
-  const data = prisma.immagine.findMany();
+  const key = (await searchParams).key;
+  const data = prisma.socio.findMany();
 
   return (
     <section>
-      <PageTitleInjector pageTitle="Galleria Immagini" />
-      <Suspense fallback={<DbLoading />} key={renderKey}>
-        <ImageGallery dataPromise={data} />
+      <PageTitleInjector pageTitle="Gestione Soci" />
+      <Suspense fallback={<DbLoading />} key={key}>
+        <GestioneSociTable dataPromise={data} />
       </Suspense>
     </section>
   );

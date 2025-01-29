@@ -22,3 +22,10 @@ export function niceTimestamp(data: Date): string {
   const seconds = String(data.getSeconds()).padStart(2, '0');
   return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 }
+
+export function dateToHtml(data: Date | null | undefined) {
+  if (data === null || data === undefined) {
+    return '';
+  }
+  return data.toISOString().split('T')[0];
+}
