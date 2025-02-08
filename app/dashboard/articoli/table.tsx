@@ -1,7 +1,6 @@
 'use client';
 import React, {useState, use} from 'react';
 import {useRouter} from 'next/navigation';
-import {Socio} from "@prisma/client";
 import {
   ColumnDef,
   getCoreRowModel,
@@ -12,7 +11,6 @@ import {
 } from '@tanstack/react-table';
 import {Badge} from "@/components/ui/badge";
 import {
-  Key,
   MoreHorizontal,
   Pencil,
   Trash2,
@@ -25,23 +23,32 @@ import {
   DropdownMenuLabel, DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import {SocioDeleteDialog} from "@/app/dashboard/anagrafica/socio-delete-dialog";
-import {SocioChangePasswordDialog} from "@/app/dashboard/anagrafica/socio-change-password-dialog";
 import DataTable from "@/components/data-table";
 import {toNiceDateNoTime} from "@/lib/utils";
+import {ArticoloDeleteDialog} from "@/app/dashboard/articoli/articolo-delete-dialog";
 
-
-interface GestioneSociTable {
-  dataPromise: Promise<Socio[]>;
+export interface DBResult {
+  id: string,
+  titolo: string,
+  slug: string,
+  pubblicato: boolean,
+  updatedAt: Date,
+  categorie: {
+    nome: string
+  }[]
 }
 
-const GestioneSociTable: React.FC<GestioneSociTable> = ({dataPromise}) => {
+interface GestioneArticoliTableProps {
+  dataPromise: Promise<DBResult[]>;
+}
+
+const GestioneArticoliTable: React.FC<GestioneArticoliTableProps> = ({dataPromise}) => {
   const tableData = use(dataPromise);
-  const [data] = useState<Socio[]>(tableData);
+  const [data] = useState<DBResult[]>(tableData);
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isPasswordChangeDialogOpen, setIsPasswordChangeDialogOpen] = useState(false);
-  const [changePasswordDialogKey, setChangePasswordDialogKey] = useState("start");
   const [dialogData, setDialogData] = useState("");
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -49,41 +56,45 @@ const GestioneSociTable: React.FC<GestioneSociTable> = ({dataPromise}) => {
   });
 
   // Define columns with strict typing
-  const columns: ColumnDef<Socio>[] = [
+  const columns: ColumnDef<DBResult>[] = [
     {
-      id: 'nome',
-      header: 'Nome e Cognome',
+      accessorKey: 'titolo',
+      header: 'Titolo',
+    },
+    {
+      accessorKey: 'slug',
+      header: 'Slug',
+    },
+    {
+      id: 'categorie',
+      header: 'Categorie',
       cell: ({row}) => {
-        const {nome, cognome} = row.original;
-        return `${nome} ${cognome}`;
-      },
-    },
-    {
-      accessorKey: 'email',
-      header: 'Email',
-    },
-    {
-      accessorKey: 'codiceFiscale',
-      header: 'Codice Fiscale',
-    },
-    {
-      id: 'dataNascita',
-      header: 'Data di nascita',
-      cell: ({row}) => {
-        const {dataNascita} = row.original;
+        const {categorie} = row.original;
         return (
-          toNiceDateNoTime(dataNascita)
+          categorie.map((cat, index) => (
+            <Badge key={index} variant="secondary" className="mr-1">
+              {cat.nome}
+            </Badge>
+          ))
         );
       },
     },
     {
-      id: 'tipoSocio',
-      header: 'Tipo Socio',
+      accessorKey: 'updatedAt',
+      header: 'Ultima Modifica',
       cell: ({row}) => {
-        const {tipoSocio} = row.original;
+        const {updatedAt} = row.original;
+        return toNiceDateNoTime(updatedAt);
+      },
+    },
+    {
+      accessorKey: 'pubblicato',
+      header: 'Pubblico',
+      cell: ({row}) => {
+        const {pubblicato} = row.original;
         return (
-          <Badge variant="secondary">
-            {tipoSocio.replace("_", " ")}
+          <Badge variant={pubblicato ? "default" : "destructive"}>
+            {pubblicato ? "Sì" : "No"}
           </Badge>
         );
       },
@@ -95,7 +106,6 @@ const GestioneSociTable: React.FC<GestioneSociTable> = ({dataPromise}) => {
         <ActionsCell
           id={row.original.id}
           setIsDeleteDialogOpen={setIsDeleteDialogOpen}
-          setIsChangePasswordDialogOpen={setIsPasswordChangeDialogOpen}
           setDialogData={setDialogData}
         />
     }
@@ -118,28 +128,17 @@ const GestioneSociTable: React.FC<GestioneSociTable> = ({dataPromise}) => {
 
   const router = useRouter();
   const handleNew = () => {
-    router.push(`/dashboard/anagrafica/new`);
+    router.push(`/dashboard/articoli/new`);
   }
 
-  const invalidateDialog = () => {
-    setChangePasswordDialogKey(Math.random().toString());
-  }
 
   return (
     <div>
-      <SocioDeleteDialog
+      <ArticoloDeleteDialog
         isDialogOpen={isDeleteDialogOpen}
         dialogData={dialogData}
+        tableData={data}
         setIsDialogOpen={setIsDeleteDialogOpen}
-        tableData={data}
-      />
-      <SocioChangePasswordDialog
-        isDialogOpen={isPasswordChangeDialogOpen}
-        dialogData={dialogData}
-        tableData={data}
-        setIsDialogOpen={setIsPasswordChangeDialogOpen}
-        invalidateDialog={invalidateDialog}
-        key={changePasswordDialogKey}
       />
       <DataTable editingEnabled table={table} columns={columns} handleNew={handleNew} />
     </div>
@@ -149,27 +148,21 @@ const GestioneSociTable: React.FC<GestioneSociTable> = ({dataPromise}) => {
 interface ActionsCellProps {
   id: string;
   setIsDeleteDialogOpen: (open: boolean) => void;
-  setIsChangePasswordDialogOpen: (open: boolean) => void;
   setDialogData: (data: string) => void;
 }
 
 const ActionsCell: React.FC<ActionsCellProps> = (
-  {id, setIsDeleteDialogOpen, setIsChangePasswordDialogOpen, setDialogData}
+  {id, setIsDeleteDialogOpen, setDialogData}
 ) => {
   const router = useRouter();
 
   const handleEdit = () => {
-    router.push(`/dashboard/anagrafica/${id}`);
+    router.push(`/dashboard/articoli/${id}`);
   };
 
   const handleDelete = () => {
     setDialogData(id);
     setIsDeleteDialogOpen(true);
-  };
-
-  const handlePasswordChange = () => {
-    setDialogData(id);
-    setIsChangePasswordDialogOpen(true);
   };
 
   return (
@@ -187,10 +180,6 @@ const ActionsCell: React.FC<ActionsCellProps> = (
           <Pencil />
           Modifica
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handlePasswordChange}>
-          <Key />
-          Rigenera Password
-        </DropdownMenuItem>
         <DropdownMenuItem onClick={handleDelete}>
           <Trash2 />
           Elimina
@@ -200,4 +189,4 @@ const ActionsCell: React.FC<ActionsCellProps> = (
   );
 };
 
-export default GestioneSociTable;
+export default GestioneArticoliTable;

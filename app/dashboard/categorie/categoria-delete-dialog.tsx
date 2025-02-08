@@ -1,4 +1,3 @@
-"use client"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -15,21 +14,22 @@ import DbLoading from "@/components/db-loading";
 import ErrorAlert from "@/components/error-alert";
 import {toast} from "react-toastify";
 import {useRouter} from "next/navigation";
-import crudSocioAction from "@/actions/crud-socio";
+import crudCategorieAction from "@/actions/crud-categorie";
 import {FormAction, ObjectId} from "@/components/form-action";
-import {Socio} from "@prisma/client";
+import {Categoria} from "@prisma/client";
 
-interface SocioDeleteDialogProps {
-  isDialogOpen: boolean;
-  dialogData: string;
-  tableData: Socio[];
-  setIsDialogOpen: (open: boolean) => void;
+interface CategoriaDeleteDialogProps {
+  isDialogOpen: boolean
+  dialogData: string; // categoria id
+  tableData: Categoria[];
+  setIsDialogOpen: (open: boolean) => void
 }
 
-export function SocioDeleteDialog({ isDialogOpen, setIsDialogOpen, dialogData, tableData }: SocioDeleteDialogProps) {
-  const [state, formAction, pending] = useActionState(crudSocioAction, {success: false, message: ''});
-  const [selectedSocio, setSelectedSocio] = useState<Socio>();
+export function CategoriaDeleteDialog(
+  { isDialogOpen, setIsDialogOpen, dialogData, tableData }: CategoriaDeleteDialogProps) {
+  const [state, formAction, pending] = useActionState(crudCategorieAction, {message: ''});
   const router = useRouter();
+  const [selectedCategoria, setSelectedCategoria] = useState<Categoria>();
 
   const updateQueryParams = (key: string, value: string) => {
     const params = new URLSearchParams(window.location.search);
@@ -39,31 +39,33 @@ export function SocioDeleteDialog({ isDialogOpen, setIsDialogOpen, dialogData, t
 
   useEffect(() => {
     if(dialogData){
-      const socio =
-        tableData.find((socio) => socio.id === dialogData);
-      setSelectedSocio(socio);
+      const categoria =
+        tableData.find((categoria) => categoria.id === dialogData);
+      if(categoria !== undefined){
+        setSelectedCategoria(categoria);
+      }
     }
   }, [dialogData]);
 
   useEffect(() => {
-    if(state.success === true && state.message === ''){
+    if(state.message === 'success'){
       setIsDialogOpen(false);
-      toast.success('Socio cancellato con successo');
+      toast.success('Categoria eliminata con successo');
       updateQueryParams('key', Math.random().toString());
     }
   }, [state]);
 
-  return state.success !== true ? (
+  return state.message !== 'success' ? (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <form action={formAction}>
           <DialogHeader>
-            <DialogTitle>Cancella socio</DialogTitle>
+            <DialogTitle>Elimina categoria</DialogTitle>
             <DialogDescription>
-              Conferma la cancellazione del seguente socio
+              Sei sicuro di voler eliminare la seguente categoria?
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-3 mb-3">
+          <div className="mt-3">
             <ConditionalHider hidden={!pending}>
               <DbLoading />
             </ConditionalHider>
@@ -71,21 +73,23 @@ export function SocioDeleteDialog({ isDialogOpen, setIsDialogOpen, dialogData, t
               <ErrorAlert error={state.message} />
             </ConditionalHider>
           </div>
-          <ObjectId objectId={dialogData} />
           <FormAction remove />
-          <div className="mb-4">
-            <span className="font-semibold">Nome e Cognome: </span> {" "}
-            {selectedSocio?.nome}{" "}{selectedSocio?.cognome}<br />
-            <span className="font-semibold">Email: </span> {" "}
-            {selectedSocio?.email}<br />
-            <span className="font-semibold">Codice Fiscale: </span> {" "}
-            {selectedSocio?.codiceFiscale}<br />
-            <span className="font-semibold">ObjectID: </span> {selectedSocio?.id} <br />
+          <ObjectId objectId={dialogData} />
+          <div className="grid gap-4 py-4">
+            <div className="mb-4">
+              <span className="font-semibold">Nome: </span> {" "}
+              {selectedCategoria?.nome}<br />
+              <span className="font-semibold">Descrizione: </span> {" "}
+              {selectedCategoria?.descrizione}<br />
+              <span className="font-semibold">Slug: </span> {" "}
+              {selectedCategoria?.slug}<br />
+              <span className="font-semibold">ObjectID: </span> {selectedCategoria?.id} <br />
+            </div>
           </div>
           <DialogFooter>
             <Button variant="destructive" type="submit">
               <Trash2 />
-              Conferma
+              Elimina
             </Button>
           </DialogFooter>
         </form>

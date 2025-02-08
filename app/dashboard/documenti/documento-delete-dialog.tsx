@@ -1,4 +1,3 @@
-"use client"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -9,25 +8,28 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import {Trash2} from "lucide-react";
-import {useActionState, useEffect} from "react";
+import {useActionState, useEffect, useState} from "react";
 import ConditionalHider from "@/components/conditional-hider";
 import DbLoading from "@/components/db-loading";
 import ErrorAlert from "@/components/error-alert";
 import {toast} from "react-toastify";
-import {Immagine} from "@prisma/client";
-import {niceTimestamp} from "@/lib/utils";
-import deleteImageAction from "@/actions/delete-image";
 import {useRouter} from "next/navigation";
+import {FormAction, ObjectId} from "@/components/form-action";
+import {Documento} from "@prisma/client";
+import crudDocumentiAction from "@/actions/crud-documenti";
 
-interface ImageDeleteDialogProps {
-  isDialogOpen: boolean;
-  dialogData: Partial<Immagine>;
-  setIsDialogOpen: (open: boolean) => void;
+interface DocumentoDeleteDialogProps {
+  isDialogOpen: boolean
+  dialogData: string; // documento id
+  tableData: Documento[];
+  setIsDialogOpen: (open: boolean) => void
 }
 
-export function ImageDeleteDialog({ isDialogOpen, setIsDialogOpen, dialogData }: ImageDeleteDialogProps) {
-  const [state, formAction, pending] = useActionState(deleteImageAction, {message: ''});
+export function DocumentoDeleteDialog(
+  { isDialogOpen, setIsDialogOpen, dialogData, tableData }: DocumentoDeleteDialogProps) {
+  const [state, formAction, pending] = useActionState(crudDocumentiAction, {message: ''});
   const router = useRouter();
+  const [selectedDocumento, setSelectedDocumento] = useState<Documento>();
 
   const updateQueryParams = (key: string, value: string) => {
     const params = new URLSearchParams(window.location.search);
@@ -36,9 +38,19 @@ export function ImageDeleteDialog({ isDialogOpen, setIsDialogOpen, dialogData }:
   };
 
   useEffect(() => {
+    if(dialogData){
+      const documento =
+        tableData.find((documento) => documento.id === dialogData);
+      if(documento !== undefined){
+        setSelectedDocumento(documento);
+      }
+    }
+  }, [dialogData]);
+
+  useEffect(() => {
     if(state.message === 'success'){
       setIsDialogOpen(false);
-      toast.success('Immagine cancellata con successo');
+      toast.success('Documento eliminato con successo');
       updateQueryParams('key', Math.random().toString());
     }
   }, [state]);
@@ -48,12 +60,12 @@ export function ImageDeleteDialog({ isDialogOpen, setIsDialogOpen, dialogData }:
       <DialogContent className="sm:max-w-[425px]">
         <form action={formAction}>
           <DialogHeader>
-            <DialogTitle>Cancella immagine</DialogTitle>
+            <DialogTitle>Elimina documento</DialogTitle>
             <DialogDescription>
-              Conferma la cancellazione della seguente immagine
+              Sei sicuro di voler eliminare il seguente documento?
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-3 mb-3">
+          <div className="mt-3">
             <ConditionalHider hidden={!pending}>
               <DbLoading />
             </ConditionalHider>
@@ -61,20 +73,21 @@ export function ImageDeleteDialog({ isDialogOpen, setIsDialogOpen, dialogData }:
               <ErrorAlert error={state.message} />
             </ConditionalHider>
           </div>
-          <input type="hidden" name="paramId" value={dialogData.id} />
-          <div className="text-gray-500 mb-5">
-            <span className="font-semibold">Didascalia: </span> {dialogData.altText}<br />
-            <span className="font-semibold">ObjectID: </span> {dialogData.id} <br />
-            <span className="font-semibold">Inclusa in Photo Gallery: </span>
-            {dialogData.includeInGallery ? 'Si' : 'No'}<br />
-            <span className="font-semibold">Inclusa in Sponsor Gallery: </span>
-            {dialogData.includeInSponsor ? 'Si' : 'No'}<br />
-            <span className="font-semibold">Ultima modifica: </span> {niceTimestamp(dialogData.updatedAt || new Date())} <br />
+          <FormAction remove />
+          <ObjectId objectId={dialogData} />
+          <div className="grid gap-4 py-4">
+            <div className="mb-4">
+              <span className="font-semibold">Titolo: </span> {" "}
+              {selectedDocumento?.titolo}<br />
+              <span className="font-semibold">Descrizione: </span> {" "}
+              {selectedDocumento?.descrizione}<br />
+              <span className="font-semibold">ObjectID: </span> {selectedDocumento?.id} <br />
+            </div>
           </div>
           <DialogFooter>
             <Button variant="destructive" type="submit">
               <Trash2 />
-              Conferma
+              Elimina
             </Button>
           </DialogFooter>
         </form>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import React from "react";
 import "./globals.css";
+import 'react-quill-new/dist/quill.snow.css';
 import {ToastContainer} from "react-toastify";
 
 export const metadata: Metadata = {
@@ -14,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="it" suppressHydrationWarning>
+    <html lang="it">
       <body className={`antialiased`}>
         {children}
         <ToastContainer position="bottom-right" limit={1} />

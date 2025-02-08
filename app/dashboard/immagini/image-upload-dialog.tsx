@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {Save} from "lucide-react";
 import {useActionState, useEffect, useState} from "react";
-import saveImageAction from "@/actions/save-image-action";
+import saveImageAction from "@/actions/save-image";
 import ConditionalHider from "@/components/conditional-hider";
 import DbLoading from "@/components/db-loading";
 import ErrorAlert from "@/components/error-alert";

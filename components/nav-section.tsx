@@ -14,15 +14,19 @@ import {
 } from "@/components/ui/sidebar"
 import Link from "next/link";
 import {useRouter} from "next/navigation";
+import ConditionalHider from "@/components/conditional-hider";
 
 export function NavSection({
   menuItems,
+  title,
 }: {
+  title: string,
   menuItems: {
     name: string
     url: string
     icon: LucideIcon
     onClickNew? : () => void
+    hideAddButton?: boolean
   }[]
 }) {
 
@@ -30,7 +34,7 @@ export function NavSection({
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Strumenti Admin</SidebarGroupLabel>
+      <SidebarGroupLabel>{title}</SidebarGroupLabel>
       <SidebarMenu>
         {menuItems.map((item) => (
           <SidebarMenuItem key={item.name}>
@@ -40,16 +44,18 @@ export function NavSection({
                 <span>{item.name}</span>
               </Link>
             </SidebarMenuButton>
-            <SidebarMenuAction showOnHover onClick={() => {
-              if (item.onClickNew) {
-                item.onClickNew();
-                return;
-              }
-              router.push(item.url + "/new");
-            }}>
-              <CirclePlus />
-              <span className="sr-only">More</span>
-            </SidebarMenuAction>
+            <ConditionalHider hidden={item.hideAddButton === true}>
+              <SidebarMenuAction showOnHover onClick={() => {
+                if (item.onClickNew) {
+                  item.onClickNew();
+                  return;
+                }
+                router.push(item.url + "/new");
+              }}>
+                <CirclePlus />
+                <span className="sr-only">More</span>
+              </SidebarMenuAction>
+            </ConditionalHider>
           </SidebarMenuItem>
         ))}
       </SidebarMenu>

@@ -15,7 +15,7 @@ import DbLoading from "@/components/db-loading";
 import ErrorAlert from "@/components/error-alert";
 import {FormAction, ObjectId} from "@/components/form-action";
 import {Socio} from "@prisma/client";
-import resetPasswordSocioAction from "@/actions/reset-pass-socio-action";
+import resetPasswordSocioAction from "@/actions/reset-pass-socio";
 
 interface SocioChangePasswordDialogProps {
   isDialogOpen: boolean;

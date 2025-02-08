@@ -6,7 +6,7 @@ import ConditionalHider from "@/components/conditional-hider";
 import DbLoading from "@/components/db-loading";
 import ErrorAlert from "@/components/error-alert";
 import {CircleArrowLeft, Save} from "lucide-react";
-import crudSocioAction from "@/actions/crud-socio-action";
+import crudSocioAction from "@/actions/crud-socio";
 import {Button} from "@/components/ui/button";
 import SocioForm from "@/app/dashboard/anagrafica/[id]/form";
 import {useRouter} from "next/navigation";

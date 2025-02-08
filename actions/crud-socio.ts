@@ -104,29 +104,6 @@ export default async function crudSocioAction(prevState: any, formData: FormData
     }
 
     return {success: true, message: ''}
-  } else if(action === 'changePassword') {
-    if(!objectId) {
-      return {success: false, message: 'ObjectId non valido'}
-    }
-
-    const nuovaPassword = generator.generate({
-      length: 12,
-      numbers: true
-    });
-    const hash = hashSync(nuovaPassword, genSaltSync(10));
-
-    try {
-      await prisma.socio.update({
-        where: {id: objectId},
-        data: {
-          passwordHash: hash
-        }
-      })
-    } catch (error) {
-      return {success: false, message: 'Errore durante il cambio password ' + error}
-    }
-
-    return {success: true, message: nuovaPassword}
   } else {
     return {success: false, message: 'Azione non valida'}
   }

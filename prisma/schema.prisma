@@ -52,8 +52,9 @@ model Immagine {
   includeInSponsor Boolean @default(false)
 
   // sicurezza
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Articolo  Articolo[]
 }
 
 model Documento {
@@ -62,8 +63,9 @@ model Documento {
 
   // dati
   titolo      String
+  mimeType    String // final
   descrizione String?
-  objectId    String  @unique @db.ObjectId
+  objectId    String  @unique @db.ObjectId //final
 
   // sicurezza
   tipoSociDestinatari TipoSocio[]
@@ -83,4 +85,30 @@ model Categoria {
   // sicurezza
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // relazioni
+  articoliId String[]   @db.ObjectId // array id articoli
+  articoli   Articolo[] @relation(fields: [articoliId], references: [id])
+}
+
+model Articolo {
+  // indici
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // dati
+  titolo     String
+  slug       String   @unique
+  contenuto  String
+  tags       String[]
+  pubblicato Boolean  @default(false)
+
+  // sicurezza
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relazioni
+  immagineCopertina   Immagine    @relation(fields: [immagineCopertinaId], references: [id])
+  immagineCopertinaId String      @db.ObjectId
+  categorieId         String[]    @db.ObjectId // array id categorie
+  categorie           Categoria[] @relation(fields: [categorieId], references: [id])
 }

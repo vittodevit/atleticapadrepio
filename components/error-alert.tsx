@@ -23,7 +23,7 @@ export default function ErrorAlert(
           {isSuccess ? "Operazione completata" : "Errore"}
         </AlertTitle>
         <ConditionalHider hidden={isSuccess === true}>
-          <AlertDescription>
+          <AlertDescription className="break-words max-w-xs">
             {error}
           </AlertDescription>
         </ConditionalHider>

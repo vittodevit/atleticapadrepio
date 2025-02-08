@@ -33,6 +33,9 @@ import MD5 from "crypto-js/md5";
 import {Session} from "next-auth";
 import {signOut} from "next-auth/react";
 import { useTheme } from "next-themes"
+import {useState} from "react";
+import AnagraficaDialog from "@/components/anagrafica-dialog";
+import ChangePasswordDialog from "@/components/change-password-dialog";
 
 export function NavUser({
   session,
@@ -41,6 +44,8 @@ export function NavUser({
 }) {
   const { setTheme: setThemeFx, theme } = useTheme()
   const { isMobile } = useSidebar()
+  const [isAnagraficaDialogOpen, setIsAnagraficaDialogOpen] = useState(false)
+  const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] = useState(false)
   const user = session.user
   const hash = MD5(user.email!).toString();
   const avatar = `https://www.gravatar.com/avatar/${hash}?s=32&d=retro`;
@@ -50,33 +55,17 @@ export function NavUser({
   }
 
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={avatar} alt={user.name!} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
-              </div>
-              <ChevronsUpDown className="ml-auto size-4" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
-            align="end"
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+    <div>
+      <AnagraficaDialog isDialogOpen={isAnagraficaDialogOpen} setIsDialogOpen={setIsAnagraficaDialogOpen} />
+      <ChangePasswordDialog isDialogOpen={isChangePasswordDialogOpen} setIsDialogOpen={setIsChangePasswordDialogOpen} />
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              >
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={avatar} alt={user.name!} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
@@ -85,32 +74,52 @@ export function NavUser({
                   <span className="truncate font-semibold">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <UserCheck />
-                Anagrafica Socio
+                <ChevronsUpDown className="ml-auto size-4" />
+              </SidebarMenuButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+              side={isMobile ? "bottom" : "right"}
+              align="end"
+              sideOffset={4}
+            >
+              <DropdownMenuLabel className="p-0 font-normal">
+                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarImage src={avatar} alt={user.name!} />
+                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">{user.name}</span>
+                    <span className="truncate text-xs">{user.email}</span>
+                  </div>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => setIsAnagraficaDialogOpen(true)}>
+                  <UserCheck />
+                  Anagrafica Socio
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setIsChangePasswordDialogOpen(true)}>
+                  <KeyRound />
+                  Cambio Password
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={setTheme}>
+                  <Sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <Moon className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  Cambia tema
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => signOut()}>
+                <LogOut />
+                Esci
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <KeyRound />
-                Cambio Password
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={setTheme}>
-                <Sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                Cambia tema
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => signOut()}>
-              <LogOut />
-              Esci
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </div>
   )
 }

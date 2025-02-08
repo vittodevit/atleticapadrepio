@@ -13,10 +13,15 @@ export function getReadableStreamFromBuffer(buffer: Buffer): Readable {
   return stream;
 }
 
+export function getReadableStreamFromArrayBuffer(arrayBuffer: ArrayBuffer): Readable {
+  const buffer = Buffer.from(arrayBuffer);
+  return getReadableStreamFromBuffer(buffer);
+}
+
 export function niceTimestamp(data: Date): string {
   const day = String(data.getDate()).padStart(2, '0');
   const month = String(data.getMonth() + 1).padStart(2, '0');
-  const year = String(data.getFullYear()).slice(-2);
+  const year = String(data.getFullYear());
   const hours = String(data.getHours()).padStart(2, '0');
   const minutes = String(data.getMinutes()).padStart(2, '0');
   const seconds = String(data.getSeconds()).padStart(2, '0');
@@ -28,4 +33,14 @@ export function dateToHtml(data: Date | null | undefined) {
     return '';
   }
   return data.toISOString().split('T')[0];
+}
+
+export function toNiceDateNoTime(data: Date | undefined): string {
+  if(data == undefined) {
+    return '';
+  }
+  const day = String(data.getDate()).padStart(2, '0');
+  const month = String(data.getMonth() + 1).padStart(2, '0');
+  const year = String(data.getFullYear());
+  return `${day}/${month}/${year}`;
 }

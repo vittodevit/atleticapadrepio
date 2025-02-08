@@ -18,7 +18,7 @@ import {toast} from "react-toastify";
 import {useRouter} from "next/navigation";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Immagine} from "@prisma/client";
-import editImageAction from "@/actions/edit-image-action";
+import editImageAction from "@/actions/edit-image";
 
 interface ImageUploadDialogProps {
   isDialogOpen: boolean

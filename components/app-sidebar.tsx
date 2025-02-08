@@ -48,6 +48,7 @@ export function AppSidebar({ ...props }: SidebarProps) {
         name: "Categorie",
         url: "/dashboard/categorie",
         icon: Tag,
+        hideAddButton: true,
       },
       {
         name: "Immagini",
@@ -56,14 +57,17 @@ export function AppSidebar({ ...props }: SidebarProps) {
         onClickNew: openImageDialog
       },
       {
+        name: "Anagrafiche",
+        url: "/dashboard/anagrafica",
+        icon: Users,
+      },
+    ],
+    navSoci: [
+      {
         name: "Documenti",
         url: "/dashboard/documenti",
         icon: FileText,
-      },
-      {
-        name: "Gestione Soci",
-        url: "/dashboard/anagrafica",
-        icon: Users,
+        hideAddButton: true,
       },
     ],
   }
@@ -93,8 +97,9 @@ export function AppSidebar({ ...props }: SidebarProps) {
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
+          <NavSection menuItems={data.navSoci} title="Risorse Soci" />
           <ConditionalHider hidden={props.session.user.role !== TipoSocio.ADMIN}>
-            <NavSection menuItems={data.navAdmin} />
+            <NavSection menuItems={data.navAdmin} title="Risorse Admin" />
           </ConditionalHider>
         </SidebarContent>
         <SidebarFooter>

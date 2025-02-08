@@ -1,7 +1,7 @@
 "use server"
 import {GridFSBucket, MongoClient, ObjectId} from 'mongodb';
 import sharp from "sharp";
-import {getReadableStreamFromBuffer} from "@/lib/utils";
+import {getReadableStreamFromArrayBuffer, getReadableStreamFromBuffer} from "@/lib/utils";
 
 const uri = process.env.MONGODB_URI || '';
 let client: MongoClient;
@@ -78,6 +78,18 @@ export async function saveImage(imageFile: File): Promise<ObjectId> {
   const fileName = imageFile.name.substring(0, imageFile.name.lastIndexOf('.')) + '.webp';
   const uploadStream = bucket.openUploadStream(fileName);
   const readable = getReadableStreamFromBuffer(webpBuffer);
+  readable.pipe(uploadStream);
+
+  return new Promise((resolve, reject) => {
+    uploadStream.on('finish', () => resolve(uploadStream.id));
+    uploadStream.on('error', reject);
+  });
+}
+
+export async function saveGenericFile(file: File): Promise<ObjectId> {
+  const bucket = await getGridFSBucket();
+  const uploadStream = bucket.openUploadStream(file.name);
+  const readable = getReadableStreamFromArrayBuffer(await file.arrayBuffer());
   readable.pipe(uploadStream);
 
   return new Promise((resolve, reject) => {
