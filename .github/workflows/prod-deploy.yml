@@ -7,10 +7,9 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: self-hosted
     permissions:
       contents: read
-      packages: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -21,12 +20,12 @@ jobs:
       - name: Build and Push Docker Image to GHCR
         run: |
           IMAGE_NAME=ghcr.io/${{ github.actor }}/atleticapadrepio
-          docker build -t $IMAGE_NAME:latest .
+          docker build -t --build-arg database_url=${{ secrets.MONGODB_URI }} $IMAGE_NAME:latest .
           docker push $IMAGE_NAME:latest
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: SSH into VPS and Deploy Container
         uses: appleboy/ssh-action@v0.1.10
