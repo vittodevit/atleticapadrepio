@@ -6,7 +6,7 @@
     "prisma": "npx prisma format && npx prisma generate && npx prisma db push",
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
+    "start": "dotenv -c -- next start",
     "lint": "next lint",
     "docker": "docker build --build-arg database_url=${MONGODB_URI} -t vittodevit/atleticapadrepio ."
   },
@@ -31,6 +31,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
+    "dotenv-cli": "^8.0.0",
     "generate-password": "^1.7.1",
     "generate-password-ts": "^1.6.5",
     "jose": "^5.9.6",
