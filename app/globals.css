@@ -99,6 +99,14 @@ body {
   border-width: 1px;
 }
 
+.bg-app-1 {
+    background-color: #2794c4;
+}
+
+.bg-app-1:hover {
+    background-color: #1f7a9d;
+}
+
 @layer components {
   /* .my-react-select-container {
   } */

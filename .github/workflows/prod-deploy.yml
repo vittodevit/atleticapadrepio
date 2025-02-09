@@ -1,0 +1,48 @@
+name: Deploy Next.js to VPS with GHCR & Docker Compose
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+
+      - name: Build and Push Docker Image to GHCR
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository }}/atleticapadrepio
+          IMAGE_NAME=${IMAGE_NAME,,}  # Convert to lowercase
+          docker build -t $IMAGE_NAME:latest .
+          docker push $IMAGE_NAME:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into VPS and Deploy Container
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          script: |
+            IMAGE_NAME=ghcr.io/${{ github.repository }}/atleticapadrepio
+            IMAGE_NAME=${IMAGE_NAME,,}  # Convert to lowercase
+
+            docker login ghcr.io -u $GITHUB_ACTOR --password ${{ secrets.GITHUB_TOKEN }}
+            
+            cd /home/${{ secrets.VPS_USER }}
+
+            docker-compose pull
+            docker-compose down
+            docker-compose up -d

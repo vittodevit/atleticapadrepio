@@ -20,21 +20,20 @@ export default function Home() {
             </Link>
           <div className="flex flex-row items-center justify-items-center">
             <button
-              className="md:hidden px-3 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white mr-2"
+              className="md:hidden px-3 py-2 bg-app-1 rounded-md text-white mr-2"
               onClick={() => setMenuHidden(!menuHidden)}
             >
               <Menu size="20" />
             </button>
             <ul className="hidden md:flex space-x-4 mr-4">
-              <li><a href="#" className="hover:underline">Home</a></li>
-              <li><a href="#" className="hover:underline">About Us</a></li>
-              <li><a href="#" className="hover:underline">Gallery</a></li>
-              <li><a href="#" className="hover:underline">Blog</a></li>
-              <li><a href="#" className="hover:underline">Contact</a></li>
+              <li><a href="#" className="hover:underline">Articoli</a></li>
+              <li><a href="#" className="hover:underline">Associazione</a></li>
+              <li><a href="#" className="hover:underline">Link Utili</a></li>
+              <li><a href="#" className="hover:underline">Contatti</a></li>
             </ul>
             <Link
               href="/dashboard"
-              className="px-3 py-2 bg-blue-500 text-white flex flex-row items-center justify-items-center gap-2 rounded-md hover:bg-blue-600"
+              className="px-3 py-2 bg-app-1 text-white flex flex-row items-center justify-items-center gap-2 rounded-md"
             >
               <User size="20" />
               <span className="hidden md:block">
@@ -52,9 +51,8 @@ export default function Home() {
             style={{backgroundImage: 'url(https://staticgeopop.akamaized.net/wp-content/uploads/sites/32/2023/05/biomeccanica-100-metri.jpg)'}}
           >
             <div className="bg-gray-700 bg-opacity-70 p-4 shadow-md w-full md:w-96">
-              <h2 className="text-lg font-bold text-white">Calendar</h2>
-              <p className="text-white">Upcoming events and races.</p>
-              <button className="mt-2 px-4 py-2 bg-blue-500 text-white">Read More</button>
+              <h2 className="text-lg font-bold text-white">Evento</h2>
+              <p className="text-white">Evento in evidenza</p>
             </div>
           </div>
         </header>
@@ -62,19 +60,18 @@ export default function Home() {
 
         <section className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white p-4 shadow-md">
-            <h2 className="text-lg font-bold">Calendar</h2>
-            <p className="text-gray-600">Upcoming events and races.</p>
-            <button className="mt-2 px-4 py-2 bg-blue-500 text-white">Read More</button>
+            <h2 className="text-lg font-bold">Zona Articoli</h2>
+            <p className="text-gray-600">Fai finta ci sia un immagine.</p>
+            <button className="mt-2 px-4 py-2 bg-blue-500 text-white">Vedi altri</button>
           </div>
           <div className="bg-white p-4 shadow-md">
-            <h2 className="text-lg font-bold">Membership</h2>
-            <p className="text-gray-600">Join our running club today.</p>
-            <button className="mt-2 px-4 py-2 bg-blue-500 text-white">Read More</button>
+            <h2 className="text-lg font-bold">Zona sponsor</h2>
+            <p className="text-gray-600">Fai finta ci sia una carrellata di immagini</p>
           </div>
           <div className="bg-white p-4 shadow-md">
-            <h2 className="text-lg font-bold">Results</h2>
-            <p className="text-gray-600">Latest race results and leaderboards.</p>
-            <button className="mt-2 px-4 py-2 bg-blue-500 text-white">Read More</button>
+            <h2 className="text-lg font-bold">Iscriviti</h2>
+            <p className="text-gray-600">Zona di iscrizione all&#39;associazione</p>
+            <button className="mt-2 px-4 py-2 bg-blue-500 text-white">Tasto che porta al form</button>
           </div>
         </section>
       </main>
