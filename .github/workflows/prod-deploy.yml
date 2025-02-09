@@ -20,7 +20,7 @@ jobs:
       - name: Build and Push Docker Image to GHCR
         run: |
           IMAGE_NAME=ghcr.io/${{ github.actor }}/atleticapadrepio
-          sudo docker build -t --build-arg database_url=${{ secrets.MONGODB_URI }} $IMAGE_NAME:latest .
+          sudo docker build -t --build-arg database_url="${{ secrets.MONGODB_URI }}" $IMAGE_NAME:latest .
           sudo docker push $IMAGE_NAME:latest
 
   deploy:
@@ -34,7 +34,6 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           script: |
-            IMAGE_NAME=ghcr.io/${{ github.actor }}/atleticapadrepio
             sudo docker login ghcr.io -u $GITHUB_ACTOR --password ${{ secrets.GITHUB_TOKEN }}
             
             cd /home/${{ secrets.VPS_USER }}/atleticapadrepio
