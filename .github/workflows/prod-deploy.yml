@@ -19,8 +19,7 @@ jobs:
 
       - name: Build and Push Docker Image to GHCR
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.actor }}/atleticapadrepio
-          sudo docker build -t --build-arg database_url="${{ secrets.MONGODB_URI }}" $IMAGE_NAME:latest .
+          sudo docker build  --build-arg database_url="${{ secrets.MONGODB_URI }}" -t ghcr.io/${{ github.actor }}/atleticapadrepio:latest .
           sudo docker push $IMAGE_NAME:latest
 
   deploy:
