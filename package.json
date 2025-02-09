@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "docker": "docker build --build-arg database_url=${MONGODB_URI} -t atleticapadrepio ."
+    "docker": "docker build --build-arg database_url=${MONGODB_URI} -t vittodevit/atleticapadrepio ."
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
