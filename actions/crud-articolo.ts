@@ -104,6 +104,36 @@ export default async function crudArticoloAction(prevState: any, formData: FormD
     }
 
     return {success: true, message: ''}
+  } else if (action === 'publish') {
+    if (!objectId) {
+      return {success: false, message: 'ObjectId non valido'}
+    }
+
+    try{
+      // flip the published field
+      const articolo = await prisma.articolo.findUnique({
+        where: {
+          id: objectId
+        }
+      })
+
+      if(!articolo) {
+        return {success: false, message: 'Articolo non trovato'}
+      }
+
+      await prisma.articolo.update({
+        data: {
+          pubblicato: !articolo.pubblicato
+        },
+        where: {
+          id: objectId
+        }
+      });
+    } catch (e) {
+      return {success: false, message: 'Errore durante il cambio di stato: ' + e}
+    }
+
+    return {success: true, message: ''}
   } else {
     return {success: false, message: 'Azione non valida'}
   }

@@ -12,7 +12,7 @@ import {
 import {Badge} from "@/components/ui/badge";
 import {
   MoreHorizontal,
-  Pencil,
+  Pencil, Rss,
   Trash2,
 } from "lucide-react";
 import {Button} from "@/components/ui/button";
@@ -26,6 +26,7 @@ import {
 import DataTable from "@/components/data-table";
 import {toNiceDateNoTime} from "@/lib/utils";
 import {ArticoloDeleteDialog} from "@/app/dashboard/articoli/articolo-delete-dialog";
+import {ArticoloPublishDialog} from "@/app/dashboard/articoli/articolo-publish-dialog";
 
 export interface DBResult {
   id: string,
@@ -47,6 +48,7 @@ const GestioneArticoliTable: React.FC<GestioneArticoliTableProps> = ({dataPromis
   const [data] = useState<DBResult[]>(tableData);
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isPublishDialogOpen, setIsPublishDialogOpen] = useState(false);
   const [dialogData, setDialogData] = useState("");
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -107,6 +109,7 @@ const GestioneArticoliTable: React.FC<GestioneArticoliTableProps> = ({dataPromis
           id={row.original.id}
           setIsDeleteDialogOpen={setIsDeleteDialogOpen}
           setDialogData={setDialogData}
+          setIsPublishDialogOpen={setIsPublishDialogOpen}s
         />
     }
   ];
@@ -140,6 +143,11 @@ const GestioneArticoliTable: React.FC<GestioneArticoliTableProps> = ({dataPromis
         tableData={data}
         setIsDialogOpen={setIsDeleteDialogOpen}
       />
+      <ArticoloPublishDialog
+        isDialogOpen={isPublishDialogOpen}
+        dialogData={dialogData} tableData={data}
+        setIsDialogOpen={setIsPublishDialogOpen}
+      />
       <DataTable editingEnabled table={table} columns={columns} handleNew={handleNew} />
     </div>
   );
@@ -149,10 +157,11 @@ interface ActionsCellProps {
   id: string;
   setIsDeleteDialogOpen: (open: boolean) => void;
   setDialogData: (data: string) => void;
+  setIsPublishDialogOpen: (open: boolean) => void;
 }
 
 const ActionsCell: React.FC<ActionsCellProps> = (
-  {id, setIsDeleteDialogOpen, setDialogData}
+  {id, setIsDeleteDialogOpen, setDialogData, setIsPublishDialogOpen}
 ) => {
   const router = useRouter();
 
@@ -164,6 +173,11 @@ const ActionsCell: React.FC<ActionsCellProps> = (
     setDialogData(id);
     setIsDeleteDialogOpen(true);
   };
+
+  const handlePubChange = () => {
+    setDialogData(id);
+    setIsPublishDialogOpen(true);
+  }
 
   return (
     <DropdownMenu>
@@ -179,6 +193,10 @@ const ActionsCell: React.FC<ActionsCellProps> = (
         <DropdownMenuItem onClick={handleEdit}>
           <Pencil />
           Modifica
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handlePubChange}>
+          <Rss />
+          Cambia stato pubblicazione
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleDelete}>
           <Trash2 />

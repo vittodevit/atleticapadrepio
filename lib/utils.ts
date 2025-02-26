@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { Readable } from 'stream';
+import { convert } from 'html-to-text';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -43,4 +44,26 @@ export function toNiceDateNoTime(data: Date | undefined): string {
   const month = String(data.getMonth() + 1).padStart(2, '0');
   const year = String(data.getFullYear());
   return `${day}/${month}/${year}`;
+}
+
+function stripHtml(html: string): string {
+  return convert(html, {
+    wordwrap: false,
+    selectors: [
+      { selector: 'img', format: 'skip' },
+      { selector: 'a', options: { ignoreHref: true } },
+    ],
+  });
+}
+
+function ellipsize(text: string, maxLength: number): string {
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return text.substring(0, maxLength) + '...';
+}
+
+export function generateEllipsizedText(htmlContent: string, maxLength: number): string {
+  const plainText = stripHtml(htmlContent);
+  return ellipsize(plainText, maxLength);
 }

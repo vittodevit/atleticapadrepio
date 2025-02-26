@@ -6,8 +6,6 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import {DialogTitle} from "@radix-ui/react-dialog";
-import {VisuallyHidden} from "@radix-ui/react-visually-hidden";
 
 const Sheet = SheetPrimitive.Root
 
@@ -60,11 +58,6 @@ const SheetContent = React.forwardRef<
   SheetContentProps
 >(({ side = "right", className, children, ...props }, ref) => (
   <SheetPortal>
-    <VisuallyHidden>
-      <DialogTitle>
-        Sidebar
-      </DialogTitle>
-    </VisuallyHidden>
     <SheetOverlay />
     <SheetPrimitive.Content
       ref={ref}

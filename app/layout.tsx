@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it">
-      <body className={`antialiased`}>
+      <body className={`antialiased`} suppressHydrationWarning>
         {children}
         <ToastContainer position="bottom-right" limit={1} />
       </body>
