@@ -3,11 +3,15 @@ import {PrismaClient, TipoSocio} from '@prisma/client';
 import { getDownloadStream, getFileName } from '@/lib/gridfs';
 import {auth} from "@/auth";
 
-const prisma = new PrismaClient();
-
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+
+  if (!process.env.DATABASE_URL) {
+    return res.status(503).json({ error: "Database is unavailable during build" });
+  }
+  const prisma = new PrismaClient();
+
   const { id } = await params;
   const session = await auth();
 
