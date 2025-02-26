@@ -5,10 +5,6 @@ import { getDownloadStream, getFileName } from '@/lib/gridfs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-
-  if (!process.env.DATABASE_URL) {
-    return res.status(503).json({ error: "Database is unavailable during build" });
-  }
   const prisma = new PrismaClient();
   const { id } = await params;
 
