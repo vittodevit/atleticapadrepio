@@ -2,11 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { getDownloadStream, getFileName } from '@/lib/gridfs';
 
-const prisma = new PrismaClient();
-
 //export const dynamic = 'force-static';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+
+  if (!process.env.DATABASE_URL) {
+    return res.status(503).json({ error: "Database is unavailable during build" });
+  }
+  const prisma = new PrismaClient();
   const { id } = await params;
 
   if (!id) {
