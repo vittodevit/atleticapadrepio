@@ -3,10 +3,8 @@ import type { Metadata, ResolvingMetadata } from 'next'
 import {Calendar, ChevronLeft} from "lucide-react";
 import {PrismaClient} from '@prisma/client';
 import {toNiceDateNoTime} from "@/lib/utils";
-import Head from 'next/head';
 import {generateEllipsizedText} from "@/lib/utils";
 import Link from "next/link";
-import { notFound } from 'next/navigation';
 
 
 const prisma = new PrismaClient();

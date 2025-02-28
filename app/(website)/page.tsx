@@ -1,4 +1,41 @@
+import React, {Suspense} from 'react';
+import CarouselArticoli from "@/app/(website)/carousel-articoli";
+import {PrismaClient} from "@prisma/client";
+import {Skeleton} from "@/components/ui/skeleton";
+
+const prisma = new PrismaClient();
+
 export default function Home() {
+
+  const articoli = prisma.articolo.findMany({
+    take: 5,
+    orderBy: {
+      createdAt: 'desc'
+    },
+    select: {
+      id: true,
+      titolo: true,
+      slug: true,
+      pubblicato: true,
+      updatedAt: true,
+      categorie: {
+        select: {
+          nome: true,
+        },
+      },
+      immagineCopertina : {
+        select: {
+          id: true,
+          altText: true,
+        }
+      },
+      contenuto: true,
+    },
+    where: {
+      pubblicato: true,
+    }
+  });
+
 
   return (
     <section>
@@ -14,13 +51,10 @@ export default function Home() {
         </div>
       </header>
 
-
       <section className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white p-4 shadow-md">
-          <h2 className="text-lg font-bold">Zona Articoli</h2>
-          <p className="text-gray-600">Fai finta ci sia un immagine.</p>
-          <button className="mt-2 px-4 py-2 bg-blue-500 text-white">Vedi altri</button>
-        </div>
+        <Suspense fallback={<Skeleton className="h-64" />}>
+          <CarouselArticoli articoliPromise={articoli} />
+        </Suspense>
         <div className="bg-white p-4 shadow-md">
           <h2 className="text-lg font-bold">Zona sponsor</h2>
           <p className="text-gray-600">Fai finta ci sia una carrellata di immagini</p>

@@ -35,8 +35,7 @@ export default async function WebsiteLayout(
         <footer className="bg-white text-center p-4 border-t border-gray-300 shadow-sm">
           <p className="text-gray-500">
             © 2025 Atletica Padre Pio. Seugici anche su
-            <a href="https://www.facebook.com/atletica.padrepio" className="text-blue-500 "> Facebook!</a><br/>
-            Sito realizzato da <a href="https://vitto.dev" className="text-blue-500">Vittorio Lo Mele</a>
+            <a href="https://www.facebook.com/atletica.padrepio" className="text-blue-500 "> Facebook!</a>
           </p>
         </footer>
       </div>
