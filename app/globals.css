@@ -103,6 +103,10 @@ body {
     background-color: #2794c4;
 }
 
+.color-app-1 {
+    color: #2794c4;
+}
+
 .bg-app-1:hover {
     background-color: #1f7a9d;
 }

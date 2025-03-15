@@ -32,7 +32,7 @@ function AppNavigation() {
               <Link href="/articoli" className="block p-2 text-base underline">
                 Articoli
               </Link>
-              <Link href="/contatti" className="block p-2 text-base underline">
+              <Link href="/app/(website)/(withsidebar)/contatti" className="block p-2 text-base underline">
                 Link Utili e Contatti
               </Link>
             </SheetDescription>

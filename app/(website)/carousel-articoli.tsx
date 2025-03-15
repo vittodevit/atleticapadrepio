@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/carousel"
 import {toNiceDateNoTime} from "@/lib/utils";
 import {Calendar} from "lucide-react";
+import Link from "next/link";
 
 interface CarouselArticoliProps {
   articoliPromise: Promise<Articolo[]>;
@@ -37,7 +38,7 @@ const CarouselArticoli: React.FC<CarouselArticoliProps> = ({articoliPromise}) =>
       <CarouselContent>
         {articoli.map((article, index) => (
           <CarouselItem key={article.id}>
-            <Card className="rounded-none bg-white shadow-md border-none">
+            <Card className="rounded-none bg-white shadow-md border-1">
               <CardContent
                 className="flex h-64 items-center justify-center p-6 bg-cover bg-center"
                 style={{
@@ -48,14 +49,16 @@ const CarouselArticoli: React.FC<CarouselArticoliProps> = ({articoliPromise}) =>
                 }}
               >
                 <div className="text-white text-center w-4/5">
-                  <h2
-                    className="text-2xl font-bold"
-                    style={{
-                      textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
-                    }}
-                  >
-                    {article.titolo}
-                  </h2>
+                  <Link href={"/articoli/" + article.slug}>
+                    <h2
+                      className="text-2xl font-bold"
+                      style={{
+                        textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
+                      }}
+                    >
+                      {article.titolo}
+                    </h2>
+                  </Link>
                   <div
                     className="text-sm flex flex-row justify-center gap-2 mt-1 w-full"
                   >
