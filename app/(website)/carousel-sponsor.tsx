@@ -63,7 +63,7 @@ const CarouselSponsor: React.FC<CarouselSponsorProps> = (
                   <span
                     className="font-bold p-2.5 pl-3 pr-3 bg-black bg-opacity-50 rounded-md"
                   >
-                    I nostri sponsor...
+                    I nostri partners...
                   </span>
                       </div>
                     )}

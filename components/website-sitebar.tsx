@@ -15,7 +15,7 @@ export default function WebsiteSitebar({immaginiPromise} : WebsiteSitebarProps) 
   return (
     <section className="grid grid-cols-1 gap-5">
       <div className="grid grid-cols-1 gap-2">
-        <h4 className="font-bold">I nostri sponsor: </h4>
+        <h4 className="font-bold">I nostri partner: </h4>
         <div className="w-full md:w-80 mb-2">
           <CarouselSponsor sponsorNonPromise={immagini} />
         </div>
